@@ -10,8 +10,8 @@ composer install
 to get all the dependencies of the application
 
 Migrate and seed the tables
-- **[php artisan db:seed --class=UsersTableSeeder]
-- **[php artisan db:seed --class=PostsTableSeeder]
+- * [php artisan db:seed --class=UsersTableSeeder]
+- * [php artisan db:seed --class=PostsTableSeeder]
 - Attches exported database for your reference (database_laravel-api.sql) in the root folder
 
 Used packages
