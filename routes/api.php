@@ -20,19 +20,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::controller(RegisterController::class)->group(function(){
+Route::controller(RegisterController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
 });
 
-Route::get('posts/{offset}/{id?}',[PostController::class,'index']);
-Route::get('view-post/{key}/{showAuthorPosts}/{userId?}',[PostController::class,'show']);
+Route::get('posts/{offset}/{id?}', [PostController::class, 'index']);
+Route::get('view-post/{key}/{showAuthorPosts}/{userId?}', [PostController::class, 'show']);
 
 
-Route::middleware('auth:sanctum')->group( function () {
-    Route::put('update-post/{id}',[PostController::class,'update']);
-    Route::post('save-post',[PostController::class,'store']);
-    Route::delete('delete-post/{id}',[PostController::class,'destroy']);
-    Route::post('post-like-status',[PostController::class,'likeStatus']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::put('update-post/{id}', [PostController::class, 'update']);
+    Route::post('save-post', [PostController::class, 'store']);
+    Route::delete('delete-post/{id}', [PostController::class, 'destroy']);
+    Route::post('post-like-status', [PostController::class, 'likeStatus']);
 });
-

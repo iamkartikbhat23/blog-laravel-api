@@ -24,7 +24,7 @@ class PostController extends BaseController
         if($id == null) {
             $posts = Post::with("author","likes")->limit(50)->offset($offset*50)->get();
         } else {
-            $posts = Post::with("author","likes")->where(['author_id'=>$id])->limit(50)->offset($offset*50)->get();
+            $posts = Post::with("author","likes")->where(['author_id'=>$id])->limit(50)->offset($offset*50)->latest()->get();
         }
 
         return $this->sendResponse(PostResource::collection($posts), 'Post retrieved successfully.');
@@ -39,6 +39,8 @@ class PostController extends BaseController
     public function store(Request $request)
     {
         $input = $request->all();
+        Log::info("Inputs To Save") ;
+        Log::info($input) ;
 
         $validator = Validator::make($input, [
             'title' => 'required',
@@ -103,9 +105,11 @@ class PostController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
         $input = $request->all();
+        Log::info("Inputs to Edit") ;
+        Log::info($input) ;
 
         $validator = Validator::make($input, [
             'title' => 'required',
@@ -116,11 +120,16 @@ class PostController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $post->title = $input['title'];
-        $post->body = $input['body'];
-        $post->save();
+        $postData = [
+            'title' => $request->title,
+            'body' => $request->body,
+            'slug' => Str::slug($request->title),
+            'image_url' => "https://picsum.photos/seed/lion".rand(1000, 5000)."/400/210",
+        ] ;
 
-        return $this->sendResponse(new PostResource($post), 'Post updated successfully.');
+        $postUpdate = Post::where(['id'=>$id])->update($postData) ;
+
+        return $this->sendResponse($postUpdate, 'Post updated successfully.');
     }
 
     /**
